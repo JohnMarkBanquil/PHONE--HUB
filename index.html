@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080808">
+    <title>PHONE HUB | Mobile Shop</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style type="text/tailwindcss">
+        @custom-variant dark (&:where(.dark, .dark *));
+
+        @theme {
+            --color-shop-base: #080808;      
+            --color-shop-surface: #171717;    
+            --color-fire: #ff6a00;
+        
+        }
+
+        @layer components {
+            .shop-button {
+                @apply inline-block bg-fire px-4 py-2 font-bold text-black transition duration-300 hover:bg-orange-400;
+            }
+
+            .shop-card {
+                @apply overflow-hidden border border-black/10 bg-white text-black transition duration-300 hover:-translate-y-1 hover:border-orange-500 dark:border-white/10 dark:bg-shop-surface dark:text-white;
+            }
+        }
+    </style>
+
+    <style>
+        :root {
+            --palette-base: var(--color-shop-base);
+            --palette-secondary: var(--color-shop-surface);
+            --palette-surface: var(--color-shop-surface);
+            --palette-accent: #ff6a00;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--palette-base);
+        }
+
+        #home,
+        #services,
+        #contact {
+            background-color: var(--palette-base);
+        }
+
+        #products {
+            background-color: var(--palette-secondary);
+        }
+
+        .shop-card,
+        .dark-panel {
+            background-color: var(--palette-surface);
+        }
+
+        .product-image-area {
+            background-color: var(--palette-surface);
+        }
+
+        .shop-card {
+            border-color: #ffffff1a;
+        }
+
+        #progressBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            width: 100%;
+            height: 4px;
+            background: #ff6a00;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        .phone-art {
+            position: relative;
+            width: 100px;
+            height: 180px;
+            padding: 5px;
+            border: 5px solid #555;
+            border-radius: 24px;
+            background: #080808;
+            box-shadow: 0 15px 30px #0007;
+        }
+
+        #heroPhones.has-custom-image .phone-art {
+            visibility: hidden;
+        }
+
+        .hero-photo {
+            position: absolute;
+            z-index: 2;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+
+        .hero-photo.is-loaded {
+            opacity: 1;
+        }
+
+        .phone-art::before {
+            content: "";
+            position: absolute;
+            z-index: 2;
+            top: 5px;
+            left: 50%;
+            width: 32px;
+            height: 7px;
+            border-radius: 10px;
+            background: #080808;
+            transform: translateX(-50%);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #595959, #303030 55%, #151515 82%, #ff6a00);
+        }
+
+        .screen-blue {
+            background: linear-gradient(145deg, #62676c, #34383c 55%, #151719 82%, #ff6a00);
+        }
+
+        .screen-purple {
+            background: linear-gradient(145deg, #626064, #373438 55%, #171518 82%, #ff6a00);
+        }
+
+        .screen-green {
+            background: linear-gradient(145deg, #626660, #353934 55%, #151815 82%, #ff6a00);
+        }
+
+        .product-image-area {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-photo {
+            position: absolute;
+            z-index: 1;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            padding: 12px;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+
+        .product-photo.is-loaded {
+            opacity: 1;
+        }
+
+        .product-image-area .phone-art {
+            transition: transform .25s ease;
+        }
+
+        .shop-card:hover .product-image-area .phone-art {
+            transform: scale(1.04);
+        }
+
+        .light-mode {
+            --palette-base: #f5f5f5;
+            --palette-secondary: #e5e5e5;
+            --palette-surface: #ffffff;
+            background: #f5f5f5;
+            color: #171717;
+        }
+
+        .light-mode header {
+            background: #ffffffed;
+            border-color: #e5e5e5;
+        }
+
+        .light-mode #home,
+        .light-mode #contact {
+            background: #f5f5f5;
+        }
+
+        .light-mode #products,
+        .light-mode #services {
+            background-color: var(--palette-secondary);
+            color: #171717;
+        }
+
+        .light-mode .shop-card {
+            background: #fff;
+            color: #171717;
+            border-color: #e5e5e5;
+        }
+
+        .light-mode .muted-text {
+            color: #525252;
+        }
+
+        .light-mode .dark-panel {
+            background: #ffffff;
+            border-color: #d4d4d4;
+        }
+
+        .light-mode #progressBar {
+            background: #ff6a00;
+        }
+
+        .light-mode .product-image-area {
+            background: #d4d4d4;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *, *::before, *::after {
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-shop-base text-white dark:bg-shop-base">
+
+    <div id="progressBar"></div>
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur">
+        <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4">
+
+            <a href="#home" class="text-xl font-black tracking-tight">
+                PHONE <span class="text-fire">HUB.</span>
+            </a>
+
+            <div class="flex flex-wrap items-center gap-4 text-xs font-bold sm:gap-6 sm:text-sm">
+                <a href="#home" class="hover:text-fire">Home</a>
+                <a href="#products" class="hover:text-fire">Phones</a>
+                <a href="#services" class="hover:text-fire">Services</a>
+                <a href="#contact" class="hover:text-fire">Contact</a>
+            </div>
+
+            <button id="themeToggle" type="button"
+                class="border border-orange-500 px-3 py-2 text-xs font-bold text-fire transition hover:bg-fire hover:text-black"
+                aria-label="Switch to light mode">
+                Light Mode
+            </button>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- HERO / HOME -->
+        <section id="home" class="overflow-hidden bg-shop-base">
+            <div class="mx-auto grid max-w-6xl items-center gap-8 px-5 py-12 sm:py-20 md:grid-cols-2">
+
+                <div id="heroText">
+                    <p class="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-fire">
+                        Welcome to Phone Hub
+                    </p>
+
+                    <h1 class="mb-5 text-4xl font-black leading-tight sm:text-6xl">
+                        Upgrade Your
+                        <span class="text-fire">Everyday.</span>
+                    </h1>
+
+                    <p class="muted-text mb-7 max-w-lg text-sm leading-7 text-gray-300 sm:text-base">
+                        Discover smartphones for every budget. Find your next device,
+                        explore useful accessories, and get help choosing the right phone.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3">
+                        <a href="#products" class="shop-button">Shop Phones →</a>
+                        <a href="#contact"
+                            class="border border-orange-500 px-4 py-2 font-bold text-fire transition hover:bg-orange-500/10">
+                            Contact Us
+                        </a>
+                    </div>
+
+                    <button id="replayIntro" type="button"
+                        class="mt-5 block text-xs text-gray-400 underline decoration-fire underline-offset-4 hover:text-fire">
+                        ↻ Replay Intro
+                    </button>
+                </div>
+
+                <!-- Decorative phone illustrations -->
+                <div id="heroPhones"
+                    class="dark-panel flex min-h-[270px] items-center justify-center gap-3 border border-white/10 p-5 sm:min-h-[340px] sm:gap-5"
+                    aria-label="Phone illustrations">
+                    <!-- Replace this path with your hero image file or image URL. -->
+                    <img class="hero-photo" src="images/hero-phones.jpg" alt="Phone display">
+                    <div class="flex flex-1 items-center justify-center gap-3 sm:gap-5">
+                        <div class="phone-art -rotate-12">
+                            <div class="phone-screen screen-blue"></div>
+                        </div>
+
+                        <div class="phone-art z-10 h-[220px] w-[120px] rotate-3">
+                            <div class="phone-screen"></div>
+                        </div>
+
+                        <div class="phone-art hidden rotate-12 sm:block">
+                            <div class="phone-screen screen-purple"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section id="products" class="bg-shop-surface px-5 py-16">
+            <div class="mx-auto max-w-6xl">
+
+                <div class="reveal mb-8">
+                    <p class="text-xs font-bold uppercase tracking-[0.25em] text-fire">Our collection</p>
+                    <h2 class="mt-2 text-3xl font-black sm:text-4xl">Popular Phones</h2>
+                    <p class="muted-text mt-2 text-sm text-gray-400">
+                        Find a phone that fits your needs and budget.
+                    </p>
+                </div>
+
+                <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+                    <!-- PHONE 1 -->
+                    <article class="shop-card reveal">
+                        <div class="product-image-area flex min-h-[210px] items-center justify-center bg-shop-surface">
+                            <img class="product-photo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIQ0OB24tpxFVQcYVWYvZ_p5lr-BgovHikMHnNoMGXXQ&s" alt="Nubia neo gt 5 5g" loading="lazy" data-product-image="nubia neo gt 5 5g">
+                            <div class="phone-art" aria-hidden="true">
+                                <div class="phone-screen"></div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="mb-1 text-[10px] font-bold uppercase tracking-widest text-fire">Best seller</p>
+                            <h3 class="text-lg font-black">Nubia n5geo gt5</h3>
+                            <p class="muted-text my-3 min-h-[48px] text-xs leading-5 text-gray-400">
+                                Stylish everyday phone for apps, calls, and entertainment.
+                            </p>
+                            <p class="mb-3 text-xl font-black text-fire">₱17,999</p>
+                            <div class="mb-3">
+                                <label class="inline-block cursor-pointer border border-orange-500 px-3 py-2 text-xs font-bold text-fire transition hover:bg-orange-500/10">
+                                    Change photo
+                                    <input class="sr-only" type="file" accept="image/*" data-image-input="nova-x1">
+                                </label>
+                                <p class="mt-1 text-xs text-gray-500" aria-live="polite" data-image-status></p>
+                            </div>
+                            <a href="#contact" class="shop-button block text-center text-sm">Inquire Now</a>
+                        </div>
+                    </article>
+
+                    <!-- PHONE 2 -->
+                    <article class="shop-card reveal">
+                        <div class="product-image-area flex min-h-[210px] items-center justify-center bg-shop-surface">
+                            <img class="product-photo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0BLutD3-ghRJII3xznJ9q8DAwppI7FJQH6GwqLulR_w&s=10" alt="Pixel Pro phone" loading="lazy" data-product-image="pixel-pro-v2">
+                            <div class="phone-art" aria-hidden="true">
+                                <div class="phone-screen screen-blue"></div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="mb-1 text-[10px] font-bold uppercase tracking-widest text-fire">For creators</p>
+                            <h3 class="text-lg font-black">Red Magic 11s pro</h3>
+                            <p class="muted-text my-3 min-h-[48px] text-xs leading-5 text-gray-400">
+                                A camera-focused phone for photos and videos.
+                            </p>
+                            <p class="mb-3 text-xl font-black text-fire">₱52,999</p>
+                            <div class="mb-3">
+                                <label class="inline-block cursor-pointer border border-orange-500 px-3 py-2 text-xs font-bold text-fire transition hover:bg-orange-500/10">
+                                    Change photo
+                                    <input class="sr-only" type="file" accept="image/*" data-image-input="pixel-pro-v2">
+                                </label>
+                                <p class="mt-1 text-xs text-gray-500" aria-live="polite" data-image-status></p>
+                            </div>
+                            <a href="#contact" class="shop-button block text-center text-sm">Inquire Now</a>
+                        </div>
+                    </article>
+
+                    <!-- PHONE 3 -->
+                    <article class="shop-card reveal">
+                        <div class="product-image-area flex min-h-[210px] items-center justify-center bg-shop-surface">
+                            <img class="product-photo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMnbqQqGWFiP9NaBb3AH5YUrJj1bpzFBbM1TzBHcreGg&amp;s=10" alt="Titan Ultra phone" loading="lazy" data-product-image="titan-ultra-v2">
+                            <div class="phone-art" aria-hidden="true">
+                                <div class="phone-screen screen-purple"></div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="mb-1 text-[10px] font-bold uppercase tracking-widest text-fire">Performance</p>
+                            <h3 class="text-lg font-black">Rog Phone 6</h3>
+                            <p class="muted-text my-3 min-h-[48px] text-xs leading-5 text-gray-400">
+                                A powerful-looking choice for gaming and multitasking.
+                            </p>
+                            <p class="mb-3 text-xl font-black text-fire">₱28,999</p>
+                            <div class="mb-3">
+                                <label class="inline-block cursor-pointer border border-orange-500 px-3 py-2 text-xs font-bold text-fire transition hover:bg-orange-500/10">
+                                    Change photo
+                                    <input class="sr-only" type="file" accept="image/*" data-image-input="titan-ultra-v2">
+                                </label>
+                                <p class="mt-1 text-xs text-gray-500" aria-live="polite" data-image-status></p>
+                            </div>
+                            <a href="#contact" class="shop-button block text-center text-sm">Inquire Now</a>
+                        </div>
+                    </article>
+
+                    <!-- PHONE 4 -->
+                    <article class="shop-card reveal">
+                        <div class="product-image-area flex min-h-[210px] items-center justify-center bg-shop-surface">
+                            <img class="product-photo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHmXD4ZbRmEv0Y8-W6_Pl6lR53t7TCgmJJhz7Vtb7FUg&amp;s=10" alt="Eco Lite phone" loading="lazy" data-product-image="eco-lite-v2">
+                            <div class="phone-art" aria-hidden="true">
+                                <div class="phone-screen screen-green"></div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <p class="mb-1 text-[10px] font-bold uppercase tracking-widest text-fire">Budget pick</p>
+                            <h3 class="text-lg font-black">motorola</h3>
+                            <p class="muted-text my-3 min-h-[48px] text-xs leading-5 text-gray-400">
+                                An affordable option for everyday essentials.
+                            </p>
+                            <p class="mb-3 text-xl font-black text-fire">₱99,999</p>
+                            <div class="mb-3">
+                                <label class="inline-block cursor-pointer border border-orange-500 px-3 py-2 text-xs font-bold text-fire transition hover:bg-orange-500/10">
+                                    Change photo
+                                    <input class="sr-only" type="file" accept="image/*" data-image-input="eco-lite-v2">
+                                </label>
+                                <p class="mt-1 text-xs text-gray-500" aria-live="polite" data-image-status></p>
+                            </div>
+                            <a href="#contact" class="shop-button block text-center text-sm">Inquire Now</a>
+                        </div>
+                    </article>
+
+                </div>
+
+                <p class="mt-5 text-xs leading-5 text-gray-500">
+                    Use each card's <strong>Change photo</strong> button to select an image from your computer.
+                    Your choice is saved in this browser. To update the site's default photos for everyone,
+                    replace the files in the <code>images</code> folder or change each image's <code>src</code>.
+                    Product names and prices are examples.
+                </p>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services" class="border-y border-white/10 bg-shop-base px-5 py-16">
+            <div class="mx-auto max-w-6xl">
+
+                <div class="reveal mb-8">
+                    <p class="text-xs font-bold uppercase tracking-[0.25em] text-fire">What we offer</p>
+                    <h2 class="mt-2 text-3xl font-black sm:text-4xl">Our Services</h2>
+                    <p class="muted-text mt-2 text-sm text-gray-300">
+                        More than just phones—we help you find what you need.
+                    </p>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-3">
+                    <article class="dark-panel reveal border border-white/10 p-6">
+                        <div class="mb-4 text-3xl">📱</div>
+                        <h3 class="mb-2 text-lg font-black text-fire">Smartphone Sales</h3>
+                        <p class="muted-text text-sm leading-6 text-gray-300">
+                            Explore phone options for different budgets, styles, and everyday needs.
+                        </p>
+                    </article>
+
+                    <article class="dark-panel reveal border border-white/10 p-6">
+                        <div class="mb-4 text-3xl">🎧</div>
+                        <h3 class="mb-2 text-lg font-black text-fire">Phone Accessories</h3>
+                        <p class="muted-text text-sm leading-6 text-gray-300">
+                            Find accessories such as chargers, cases, screen protectors, and earphones.
+                        </p>
+                    </article>
+
+                    <article class="dark-panel reveal border border-white/10 p-6">
+                        <div class="mb-4 text-3xl">💬</div>
+                        <h3 class="mb-2 text-lg font-black text-fire">Customer Assistance</h3>
+                        <p class="muted-text text-sm leading-6 text-gray-300">
+                            Get help comparing devices and choosing the right phone for you.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="bg-shop-base px-5 py-16">
+            <div class="mx-auto grid max-w-6xl gap-8 md:grid-cols-2">
+
+                <div class="reveal">
+                    <p class="text-xs font-bold uppercase tracking-[0.25em] text-fire">Get in touch</p>
+                    <h2 class="mt-2 text-3xl font-black sm:text-4xl">
+                        Let's Find Your Next Phone.
+                    </h2>
+                    <p class="muted-text mt-4 max-w-lg text-sm leading-7 text-gray-400">
+                        Interested in a phone or accessory? Send us a message and tell us what you are looking for.
+                    </p>
+
+                    <div class="dark-panel mt-6 border-l-4 border-fire p-4">
+                        <p class="font-bold text-fire">PHONE HUB</p>
+                        <p class="muted-text mt-1 text-sm text-gray-400">Your next upgrade starts here.</p>
+                    </div>
+                </div>
+
+                <form id="contactForm" class="reveal dark-panel border border-white/10 p-5">
+                    <label for="customerName" class="mb-2 block text-sm font-bold">Your Name</label>
+                    <input id="customerName" name="name" type="text" required
+                        class="mb-4 w-full border border-white/20 bg-black px-3 py-3 text-sm text-white outline-none focus:border-fire">
+
+                    <label for="customerEmail" class="mb-2 block text-sm font-bold">Your Email</label>
+                    <input id="customerEmail" name="email" type="email" required
+                        class="mb-4 w-full border border-white/20 bg-black px-3 py-3 text-sm text-white outline-none focus:border-fire">
+
+                    <label for="customerMessage" class="mb-2 block text-sm font-bold">Message</label>
+                    <textarea id="customerMessage" name="message" rows="4" required
+                        class="mb-4 w-full border border-white/20 bg-black px-3 py-3 text-sm text-white outline-none focus:border-fire"></textarea>
+
+                    <button type="submit" class="shop-button w-full">Send Inquiry →</button>
+                    <p class="mt-3 text-xs text-gray-500">
+                        This demo opens your email app. Set the shop email in script.js first.
+                    </p>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/10 bg-shop-base px-5 py-6">
+        <div class="mx-auto flex max-w-6xl flex-col justify-between gap-3 text-sm sm:flex-row">
+            <p class="font-black">PHONE <span class="text-fire">HUB.</span></p>
+            <p class="text-gray-500">© <span id="year"></span> Phone Hub. All rights reserved.</p>
+            <a href="#home" class="text-gray-400 hover:text-fire">Back to top ↑</a>
+        </div>
+    </footer>
+
+    <!-- Load GSAP before your own script -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
